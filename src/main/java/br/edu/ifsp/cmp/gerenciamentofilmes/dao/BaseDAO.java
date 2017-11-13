@@ -1,5 +1,7 @@
 package br.edu.ifsp.cmp.gerenciamentofilmes.dao;
 
+import javax.persistence.criteria.Order;
+import java.io.Serializable;
 import java.util.List;
 
 public interface BaseDAO <T>{
@@ -8,9 +10,9 @@ public interface BaseDAO <T>{
 
     T read(Long id);
 
-    List<T> read(String parameter);
+    List<T> read(T object, String name, String columnName);
 
-    void update(T object);
+    void update(T object, Long id);
 
     void delete(T object);
 
