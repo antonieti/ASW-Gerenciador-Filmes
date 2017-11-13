@@ -14,5 +14,13 @@ public class Application {
         Movie movie = Movie.builder().name("Man of Steel").year(Short.parseShort("2011")).build();
         EntityManager em = ConnectionFactory.getEntityManager();
         log.info(movie.toString());
+
+        movie.insertMovie();
+
+        System.out.print(movie);
+
+        em.getTransaction().begin();
+        em.remove(movie);
+        em.getTransaction().commit();
     }
 }

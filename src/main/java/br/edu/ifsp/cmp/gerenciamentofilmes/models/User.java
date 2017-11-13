@@ -11,19 +11,26 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
-@Entity(name = "PRODUTORAS")
+@Entity(name = "USUARIO")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Producer {
+public class User {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @Column(name = "nome", nullable = false)
-    @NotBlank(message = "Nome da Produtora é obrigatório")
+    @Column(nullable = false, name = "nome")
+    @NotBlank(message = "Nome do usuário é obrigatório.")
     private String name;
 
+    @Column(nullable = false, name = "usuario")
+    @NotBlank(message = "Campo usuário é obrigatório.")
+    private String userName;
+
+    @Column(nullable = false, name = "senha")
+    @NotBlank(message = "Senha é obrigatório.")
+    private String password;
 }
