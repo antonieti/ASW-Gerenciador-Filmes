@@ -16,7 +16,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class User extends AbstractModel implements BaseModel {
 
     @Id
     @GeneratedValue
@@ -33,4 +33,13 @@ public class User {
     @Column(nullable = false, name = "senha")
     @NotBlank(message = "Senha é obrigatório.")
     private String password;
+
+    @Override
+    public void clone(AbstractModel object) {
+        User us = (User) object;
+        this.name = us.getName();
+        this.password = us.getPassword();
+        this.userName = us.getUserName();
+
+    }
 }

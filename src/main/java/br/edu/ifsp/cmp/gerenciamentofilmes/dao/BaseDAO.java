@@ -1,19 +1,23 @@
 package br.edu.ifsp.cmp.gerenciamentofilmes.dao;
 
-import javax.persistence.criteria.Order;
-import java.io.Serializable;
+import br.edu.ifsp.cmp.gerenciamentofilmes.models.AbstractModel;
+import br.edu.ifsp.cmp.gerenciamentofilmes.models.Movie;
+
 import java.util.List;
 
-public interface BaseDAO <T>{
+public interface BaseDAO {
 
-    void create(T object);
+    public void save(AbstractModel object) ;
 
-    T read(Long id);
+    public void update(AbstractModel m, Long id) ;
 
-    List<T> read(T object, String name, String columnName);
+    public Movie findById(Long id) ;
 
-    void update(T object, Long id);
+    public List findFrom(String column, String parameter);
 
-    void delete(T object);
+    public List findAll() ;
 
+    void remove(AbstractModel object) ;
+
+    public void removeId(Long id);
 }

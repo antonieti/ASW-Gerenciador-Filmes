@@ -21,7 +21,7 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Movie {
+public class Movie extends AbstractModel implements BaseModel {
 
     @Id
     @GeneratedValue
@@ -38,22 +38,11 @@ public class Movie {
     @NotBlank(message = "Nome do Movie é obrigatório.")
     private String name;
 
-    public void insertMovie(){
 
-        Movie m = Movie.builder().name(this.name).year(this.year).producer(this.producer).build();
-
-        EntityManager em = ConnectionFactory.getEntityManager();
-        em.getTransaction().begin();
-        em.persist(m);
-        em.getTransaction().commit();
-
-    }
-
-    public void removeMovie(){
-        Movie m
-                = Movie.builder().name(this.name).year(this.year).producer(this.producer).build();
-
-
-
+    public void clone(AbstractModel object) {
+        Movie obj  = (Movie) object;
+        this.name = obj.getName();
+        this.year= obj.getYear();
+        this.producer=obj.getProducer();
     }
 }

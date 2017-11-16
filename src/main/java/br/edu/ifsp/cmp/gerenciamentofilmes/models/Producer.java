@@ -16,7 +16,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Producer {
+public class Producer implements BaseModel {
 
     @Id
     @GeneratedValue
@@ -26,4 +26,7 @@ public class Producer {
     @NotBlank(message = "Nome da Produtora é obrigatório")
     private String name;
 
+    public void clone(AbstractModel object) {
+
+    }
 }

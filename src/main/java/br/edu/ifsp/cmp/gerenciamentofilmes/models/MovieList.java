@@ -18,7 +18,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 @Builder
-public class MovieList {
+public class MovieList implements BaseModel {
 
     @Id
     @GeneratedValue
@@ -28,7 +28,7 @@ public class MovieList {
     private User user;
 
     @ManyToOne
-    private Movie movie;
+    private Movie name;
 
     @Column(name = "assistido")
     private boolean watched;
@@ -38,4 +38,13 @@ public class MovieList {
 
     @Column(name = "dataAssistido")
     private Date date;
+
+    @Override
+    public void clone(AbstractModel object) {
+
+    }
+
+    public String getName(){
+        return name.getName();
+    }
 }
