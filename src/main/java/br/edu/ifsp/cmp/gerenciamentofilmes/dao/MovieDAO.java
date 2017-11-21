@@ -4,7 +4,6 @@ package br.edu.ifsp.cmp.gerenciamentofilmes.dao;
 import br.edu.ifsp.cmp.gerenciamentofilmes.models.AbstractModel;
 import br.edu.ifsp.cmp.gerenciamentofilmes.models.BaseModel;
 import br.edu.ifsp.cmp.gerenciamentofilmes.models.Movie;
-import br.edu.ifsp.cmp.gerenciamentofilmes.models.MovieList;
 import br.edu.ifsp.cmp.gerenciamentofilmes.utils.ConnectionFactory;
 
 import javax.persistence.EntityManager;
@@ -64,19 +63,20 @@ public class MovieDAO{
         return em.createQuery(query.where(restriction)).getResultList();
     }
 
-    public List findFromUser(Long parameter) {
-        Class entityClass = MovieList.class;
+    public Movie findByName(String parameter) {
+        Class entityClass = Movie.class;
         CriteriaBuilder cb = this.em.getCriteriaBuilder();
         CriteriaQuery<BaseModel> query = cb.createQuery(BaseModel.class);
 
 
         Root<BaseModel> from = query.from(entityClass);
 
-        Predicate restriction = cb.like(from.<String>get("user"), "%" + parameter + "%");
+        Predicate restriction = cb.equal(from.<String>get("name"),  parameter );
 
         query.select(from).equals(restriction);
-        return em.createQuery(query.where(restriction)).getResultList();
+        return (Movie) em.createQuery(query.where(restriction));
     }
+
 
     public List findAll() {
         return this.findFrom("name", " ");

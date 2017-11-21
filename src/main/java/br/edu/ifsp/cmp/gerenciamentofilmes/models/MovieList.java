@@ -12,21 +12,22 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import java.util.Date;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity(name = "USUARIO_FILME")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-@EqualsAndHashCode(callSuper = false)
 public class MovieList extends AbstractModel{
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     private User user;
 
     @ManyToOne
@@ -41,6 +42,8 @@ public class MovieList extends AbstractModel{
     @Column(name = "dataAssistido")
     private Date date;
 
+
+
     @Override
     public void clone(AbstractModel object) {
         //it is implemented
@@ -52,6 +55,9 @@ public class MovieList extends AbstractModel{
         this.watched = aux.watched;
     }
 
+    public Movie getMovie(){
+        return this.name;
+    }
     public String getName(){
         return name.getName();
     }

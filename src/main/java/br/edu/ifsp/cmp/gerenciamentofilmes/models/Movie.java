@@ -4,7 +4,6 @@ package br.edu.ifsp.cmp.gerenciamentofilmes.models;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -20,7 +19,6 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 public class Movie extends AbstractModel{
 
     @Id
@@ -37,6 +35,12 @@ public class Movie extends AbstractModel{
     @Column(nullable = false, name = "nome")
     @NotBlank(message = "Nome do Movie é obrigatório.")
     private String name;
+
+    public Movie(String movie, Short year, Producer producer) {
+        this.name = movie;
+        this.year = year;
+        this.producer = producer;
+    }
 
 
     public void clone(AbstractModel object) {

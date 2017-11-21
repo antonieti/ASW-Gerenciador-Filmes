@@ -28,6 +28,10 @@ public class Producer extends AbstractModel{
     @NotBlank(message = "Nome da Produtora é obrigatório")
     private String name;
 
+    public Producer(String producerName) {
+        this.name= producerName;
+    }
+
     public Long getId(){
         return  this.id;
     }

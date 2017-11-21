@@ -57,7 +57,7 @@ public class UserDAO implements BaseDAO {
 
         Root<BaseModel> from = query.from(entityClass);
 
-        Predicate restriction = cb.like(from.<String>get(column), "%" + parameter + "%");
+        Predicate restriction = cb.equal(from.<String>get(column), parameter );
 
         query.select(from).equals(restriction);
         return em.createQuery(query.where(restriction)).getResultList();
