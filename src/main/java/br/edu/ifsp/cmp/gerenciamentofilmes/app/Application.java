@@ -20,6 +20,7 @@ public class Application {
         movieDAO.save(movie);
         movieDAO.save(movie2);
 
+
         movieDAO.update(movie, movie2.getId());
 
 

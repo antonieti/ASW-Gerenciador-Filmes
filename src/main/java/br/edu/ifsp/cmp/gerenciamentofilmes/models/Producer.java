@@ -3,6 +3,7 @@ package br.edu.ifsp.cmp.gerenciamentofilmes.models;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -16,7 +17,8 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Producer implements BaseModel {
+@EqualsAndHashCode(callSuper = false)
+public class Producer extends AbstractModel{
 
     @Id
     @GeneratedValue
@@ -26,7 +28,13 @@ public class Producer implements BaseModel {
     @NotBlank(message = "Nome da Produtora é obrigatório")
     private String name;
 
-    public void clone(AbstractModel object) {
+    public Long getId(){
+        return  this.id;
+    }
 
+
+    public void clone(AbstractModel object) {
+        Producer producer = (Producer) object;
+        this.name = producer.getName();
     }
 }

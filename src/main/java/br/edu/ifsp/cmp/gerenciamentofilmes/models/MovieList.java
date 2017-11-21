@@ -4,6 +4,7 @@ package br.edu.ifsp.cmp.gerenciamentofilmes.models;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -18,7 +19,8 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 @Builder
-public class MovieList implements BaseModel {
+@EqualsAndHashCode(callSuper = false)
+public class MovieList extends AbstractModel{
 
     @Id
     @GeneratedValue
@@ -41,7 +43,13 @@ public class MovieList implements BaseModel {
 
     @Override
     public void clone(AbstractModel object) {
-
+        //it is implemented
+        MovieList aux = (MovieList) object;
+        this.date = aux.getDate();
+        this.name = aux.name;
+        this.rate = aux.getRate();
+        this.user = aux.getUser();
+        this.watched = aux.watched;
     }
 
     public String getName(){

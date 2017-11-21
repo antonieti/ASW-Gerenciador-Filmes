@@ -1,15 +1,14 @@
 package br.edu.ifsp.cmp.gerenciamentofilmes.models;
 
 
-import br.edu.ifsp.cmp.gerenciamentofilmes.utils.ConnectionFactory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -21,7 +20,8 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Movie extends AbstractModel implements BaseModel {
+@EqualsAndHashCode(callSuper = false)
+public class Movie extends AbstractModel{
 
     @Id
     @GeneratedValue

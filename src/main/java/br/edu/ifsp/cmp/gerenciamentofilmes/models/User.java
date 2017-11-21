@@ -3,6 +3,7 @@ package br.edu.ifsp.cmp.gerenciamentofilmes.models;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -16,7 +17,8 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User extends AbstractModel implements BaseModel {
+@EqualsAndHashCode(callSuper = false)
+public class User extends AbstractModel {
 
     @Id
     @GeneratedValue
