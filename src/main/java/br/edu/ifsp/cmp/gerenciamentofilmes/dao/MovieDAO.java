@@ -13,7 +13,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
-public class MovieDAO{
+public class MovieDAO implements BaseDAO{
 
     private EntityManager em;
 
@@ -22,22 +22,21 @@ public class MovieDAO{
     }
 
 
-    public void save(AbstractModel object) {
+    @Override
+    public void save(Object object) {
         Movie m = (Movie) object;
         this.em.getTransaction().begin();
         this.em.persist(m);
         this.em.getTransaction().commit();
-        List<AbstractModel> list = findFrom("name", m.getName());
-        m.setId(list.get(0).getId());
     }
 
-    public void update(AbstractModel m, Long id) {
+    @Override
+    public void update(Object m, Long id) {
         Movie bm = (Movie) findById(id);
-        bm.clone(m);
+        bm.clone((Movie)m);
         this.em.getTransaction().begin();
         this.em.persist(bm);
         this.em.getTransaction().commit();
-
     }
 
     public AbstractModel findById(Long id) {
@@ -74,7 +73,16 @@ public class MovieDAO{
         Predicate restriction = cb.equal(from.<String>get("name"),  parameter );
 
         query.select(from).equals(restriction);
-        return (Movie) em.createQuery(query.where(restriction));
+
+        List<BaseModel> movie =  em.createQuery(query.where(restriction)).getResultList();
+        for (BaseModel m: movie) {
+            Movie movie1 = (Movie) m;
+            if(movie1.getName().equalsIgnoreCase(parameter)){
+                return movie1;
+            }
+
+        }
+        return null;
     }
 
 
@@ -82,11 +90,13 @@ public class MovieDAO{
         return this.findFrom("name", " ");
     }
 
-    public void remove(AbstractModel object) {
+    @Override
+    public void remove(Object object) {
         em.getTransaction().begin();
         em.remove(object);
         em.getTransaction().commit();
     }
+
 
     public void removeId(Long id){
         remove(findById(id));

@@ -23,7 +23,7 @@ public class MovieListDAO implements BaseDAO {
     }
 
     @Override
-    public void save(AbstractModel object) {
+    public void save(Object object) {
         MovieList movieList = (MovieList) object;
         em.getTransaction().begin();
         em.persist(movieList);
@@ -31,9 +31,9 @@ public class MovieListDAO implements BaseDAO {
     }
 
     @Override
-    public void update(AbstractModel m, Long id) {
+    public void update(Object m, Long id) {
         MovieList bm = (MovieList) findById(id);
-        bm.clone(m);
+        bm.clone((MovieList)m);
         this.em.getTransaction().begin();
         this.em.persist(bm);
         this.em.getTransaction().commit();
@@ -99,7 +99,7 @@ public class MovieListDAO implements BaseDAO {
 
         Root<BaseModel> from = query.from(entityClass);
 
-        Predicate restriction = cb.equal(from.<String>get("movie"),  parameter );
+        Predicate restriction = cb.equal(from.<String>get("name"),  parameter );
 
         query.select(from).equals(restriction);
         return em.createQuery(query.where(restriction)).getResultList();
@@ -114,7 +114,7 @@ public class MovieListDAO implements BaseDAO {
     }
 
     @Override
-    public void remove(AbstractModel object) {
+    public void remove(Object object) {
         em.getTransaction().begin();
         em.remove(object);
         em.getTransaction().commit();

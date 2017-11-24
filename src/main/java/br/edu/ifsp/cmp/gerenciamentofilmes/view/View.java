@@ -8,44 +8,32 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.File;
 import java.io.IOException;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
-import javax.swing.WindowConstants;
+import java.util.List;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
+import br.edu.ifsp.cmp.gerenciamentofilmes.controller.Controller;
+import br.edu.ifsp.cmp.gerenciamentofilmes.models.Movie;
+import br.edu.ifsp.cmp.gerenciamentofilmes.models.MovieList;
+import br.edu.ifsp.cmp.gerenciamentofilmes.models.User;
 import lombok.extern.log4j.Log4j2;
 import net.miginfocom.swing.MigLayout;
 
 @Log4j2
 public class View {
-    
+
+    public static User user;
     private static Point point = new Point();
     private ImageIcon userIcon;
     private ImageIcon passwordIcon;
@@ -251,7 +239,8 @@ public class View {
         UIManager.put("Panel.background", new Color(53,60,66));
         UIManager.put("Button.background", new Color(236,110,69));
         UIManager.put("Button.foreground", Color.WHITE);
-        
+        UIManager.put("Button.font",new Font("Dialog", Font.PLAIN,12));
+
         //Exit + Minimize Menu
         menuBar = new JMenuBar();
         menuBar.setPreferredSize(new Dimension(826, 25));
@@ -514,27 +503,22 @@ public class View {
         scrollAssistindo.setVerticalScrollBarPolicy(scrollAssistindo.VERTICAL_SCROLLBAR_ALWAYS);
         scrollAssistindo.setBorder(BorderFactory.createEmptyBorder());
         assistindoPanelTab.add(scrollAssistindo,"height 300, width 600,span 3");
-
         
         //Tab Finalizados
         finalizadoPanelTab = new JPanel(new MigLayout("center","20[][]20","50[][]20"));
-        finalizadoPanelTab.setBackground(Color.WHITE);
+        finalizadoPanelTab.setBackground(Color.BLUE);
         moviePane.addTab("Finalizados",finalizadoPanelTab);
         
         finalizadoPanel = new JPanel(new MigLayout("wrap 2","10[]20[]10","[]10[]"));
-        finalizadoPanel.setBackground(Color.WHITE);
+        finalizadoPanel.setBackground(Color.RED);
         
         scrollFinal = new JScrollPane(finalizadoPanel);
         scrollFinal.setVerticalScrollBarPolicy(scrollFinal.VERTICAL_SCROLLBAR_ALWAYS);
         scrollFinal.setBorder(BorderFactory.createEmptyBorder());
-        finalizadoPanelTab.add(scrollFinal,"center,height 300, width 600,span 3");
+        finalizadoPanelTab.add(scrollFinal,"height 300, width 600,span 3");
         
         main.add(moviePane,"height 420, width 670,center,wrap");
-        
-        moviePane.addChangeListener(new ChangeListener() {
-        public void stateChanged(ChangeEvent e) {  
-            TabstateChanged(e);     
-        }});
+
         
         root.add(main, "home");
 
@@ -546,7 +530,8 @@ public class View {
     
     public void quitMouseClicked(MouseEvent e){
         quit.setSelected(false);
-        
+
+        user = null;
         //aqui
         //colocar codigo para desconectar o usuario atual
         
@@ -562,7 +547,7 @@ public class View {
     }
     
     public void addMouseClicked(MouseEvent e){
-        add.setSelected(false);
+        add.setSelected(true);
         addDialog = new JPanel(new MigLayout("center,wrap 2","10[]10[]10","[]10[]"));
         addDialog.setBackground(new Color(53,60,66));
         
@@ -598,6 +583,14 @@ public class View {
         int reply = JOptionPane.showConfirmDialog(window, addDialog,null,JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         
         if (reply == JOptionPane.OK_OPTION){
+            user = User.builder().name("Giovanna").userName("Giovanna").password("Giovanna").build();
+            Short ano = Short.parseShort(dialogTextAno.getText());
+            String nome = dialogTextNome.getText();
+            String produtora = dialogTextProd.getText();
+            Controller controller = new Controller();
+            controller.saveUser(user);
+            controller.saveMovie(produtora, nome, ano,user);
+            updateTab();
             // aqui
             // colocar o codigo para adicionar um novo filme
             // os input dos textfield são: 
@@ -644,13 +637,28 @@ public class View {
         miniButton.setSelected(false);
     }
     public void entrarMouseClicked(MouseEvent e) {
+
+        Controller controller = new Controller();
+        User user1 = User.builder().name("administrator").userName("adm123").password("123").build();
+        controller.saveUser(user1);
+        String userName = textlogin.getText();
+        char[] password = textpassword.getPassword();
+        boolean condition = controller.verifyPaswword(userName, password);
+        if (condition) {
+            user = controller.login(userName);
+            cl.show(root,"home");
+        }else{
+            JOptionPane.showMessageDialog(null, "Senha ou usuario incorreto", "InfoBox: Erro ao realizar login" , JOptionPane.INFORMATION_MESSAGE);
+        }
+        updateTab();
+        username.setText("Bem vindo, "+ user.getName());
         //aqui
         //colocar codigo para conectar o usuario
         
         //textlogin.getText() = username 
         //textpassword.getPassword(); = senha do usuario
         
-        cl.show(root,"home");
+
     }
     public void cadastrarMouseClicked(MouseEvent e) {
         cl.show(root,"newUser");
@@ -662,74 +670,91 @@ public class View {
         //textNomeLabel.getText() = nome do novo usuario
         //textNewUserLabel.getText() = user do novo usuario
         //textpasswordNewUserLabel.getPassword() = senha do novo usuario
-        
+        Controller controller = new Controller();
+        controller.saveUser(textNomeLabel.getText(),textNewUserLabel.getText(),textpasswordNewUserLabel.getPassword());
+
+        JOptionPane.showMessageDialog(null,"Usuário cadastrado com sucesso");
+
         cl.show(root,"home");
     }
+
     public void cadastrarCancelarMouseClicked(MouseEvent e) {
         cl.show(root,"login");
     }
-    
-    public void TabstateChanged(ChangeEvent e) {
+
+
+    public void updateTab(){
         //aqui
-        if(moviePane.getSelectedIndex() == 0){
-            
-            //aqui 
-            //quando as tabs mudam, carregar os filme do banco de dados
-            //Aba assistindo
-            assistindoPanel.removeAll();
-            
-            for (int i = 0; i < 50; i++){ //só um exemplo pra testar
-            
+        //update
+        //ok
+        assistindoPanel.removeAll();
+        finalizadoPanelTab.removeAll();
+
+        Controller controller = new Controller();
+
+        List<MovieList> pendentes = controller.notWatchedMovie(user.getId());
+        for (int i=0; i < pendentes.size();i++){
+
             JLabel remover = new JLabel();
             remover.setIcon(removeIcon);
             assistindoPanel.add(remover,"");
-            
-            remover.addMouseListener(new MouseAdapter(){  
-            public void mouseClicked(MouseEvent e){  
-                removeMouseClicked(e);
-            }}); 
-            
-            JLabel nome = new JLabel("filme"); //trocar pelo nome do filme no database
+
+            JLabel nome = new JLabel(pendentes.get(i).getMovie().getName());
+
+            remover.addMouseListener(new MouseAdapter(){
+                public void mouseClicked(MouseEvent e){
+                    removeMouseClicked(e, nome.getText());
+                }});
+
             assistindoPanel.add(nome,"");
-            
+
             nome.addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent e){  
-                rateMouseClicked(e);
-            }});
-            }
+                @Override
+                public void mouseClicked(MouseEvent e){
+                    rateMouseClicked(e,nome.getText());
+                }});
         }
-        if(moviePane.getSelectedIndex() == 1){
-            //mesma coisa, só que com a aba Finalizados
-            assistindoPanel.removeAll();
-            
-            for (int i = 0; i < 50; i++){
-            
-            JLabel nomes = new JLabel("filme");
-            finalizadoPanel.add(nomes,"");
-            
-            nomes.addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent e){
-                infoMouseClicked(e);
-            }});
-            
-            JLabel avaliacao = new JLabel("avaliacao");
-            finalizadoPanel.add(avaliacao,"");
+
+        List<MovieList> finalizados = controller.watchedMovie(user.getId());
+
+            for (int i=0; i < finalizados.size();i++){
+
+                JLabel nomes = new JLabel(finalizados.get(i).getMovie().getName());
+                finalizadoPanel.add(nomes,"");
+
+                nomes.addMouseListener(new MouseAdapter(){
+                    @Override
+                    public void mouseClicked(MouseEvent e){
+                        infoMouseClicked(e,nomes.getText());
+                    }});
+
+                JLabel avaliacao = new JLabel(String.valueOf(finalizados.get(i).getRate()));
+                finalizadoPanel.add(avaliacao," ");
             }
- 
-        }
+
+            assistindoPanel.revalidate();
+            finalizadoPanel.revalidate();
+            assistindoPanel.repaint();
+            finalizadoPanel.repaint();
+
     }
-    public void removeMouseClicked(MouseEvent e)  
-    {  
-        //aqui
-        //Colocar codigo que remove o filme selecionado
+
+
+
+    public void removeMouseClicked(MouseEvent e, String text)
+    {
+        Controller controller = new Controller();
+        controller.removeMovie(text, user.getId());
+        updateTab();
     }  
-    public void rateMouseClicked(MouseEvent e)  
+    public void rateMouseClicked(MouseEvent e, String text)
     {  
         //aqui
         //Colocar codigo muda o jlabel dialogNome para o nome do item selecionado do JtabbedPanel
         // e guradar a avaliação escolhida no database
+
+        Controller controller = new Controller();
+
         rateDialog = new JPanel(new MigLayout("center,wrap 2","10[]10[]10","[]10[]"));
         rateDialog.setBackground(new Color(53,60,66));
         
@@ -742,7 +767,7 @@ public class View {
         dialogLabelNome.setForeground(Color.WHITE);
         rateDialog.add(dialogLabelNome,"align right");
         
-        dialogNome = new JLabel("exemplo"); // nome do filme no database
+        dialogNome = new JLabel(text); // nome do filme no database
         dialogNome.setForeground(Color.WHITE);
         dialogNome.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         rateDialog.add(dialogNome,"grow,wrap");
@@ -757,62 +782,74 @@ public class View {
         int reply = JOptionPane.showConfirmDialog(window, rateDialog,null,JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         
         if (reply == JOptionPane.OK_OPTION){
+
             // aqui
             // colocar o codigo para avaliar o filme
             // dialogAval.getSelectedItem() = avaliacao escolhida
+            Movie filme = controller.findMovieByName(text);
+            controller.rateMovie(filme, user.getId(), Long.parseLong(dialogAval.getSelectedItem().toString()));
+            updateTab();
         }
     }
-    public void infoMouseClicked(MouseEvent e)  
+    public void infoMouseClicked(MouseEvent e, String text)
     {  
         //aqui
         //Colocar codigo muda os jlabel para o nome do item selecionado do JtabbedPanel
+        //aqui
+        //ok
+        Controller controller = new Controller();
+        Movie filmeInfo = controller.findMovieByName(text);
+        MovieList filmeUsuarioInfo = controller.getMovieInfo(filmeInfo, user.getId());
+
         infoDialog = new JPanel(new MigLayout("center,wrap 2","10[]10[]10","[]10[]"));
         infoDialog.setBackground(new Color(53,60,66));
-        
+
         labelAdd = new JLabel("DETALHES");
         labelAdd.setFont(new Font("Mohave", Font.BOLD, 76));
         labelAdd.setForeground(Color.WHITE);
         infoDialog.add(labelAdd,"span,wrap");
-        
+
         dialogLabelNome = new JLabel("Nome");
         dialogLabelNome.setForeground(Color.WHITE);
         infoDialog.add(dialogLabelNome,"align right");
-        
-        dialogNome = new JLabel("exemplo"); // nome do filme no database
+
+        dialogNome = new JLabel(filmeInfo.getName()); // nome do filme no database
         dialogNome.setForeground(Color.WHITE);
         dialogNome.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         infoDialog.add(dialogNome,"grow,wrap");
-        
+
         dialogLabelData = new JLabel("Ano");
         dialogLabelData.setForeground(Color.WHITE);
         infoDialog.add(dialogLabelData,"align right");
-        
-        dialogData = new JLabel("exemplo"); // ano do filme no database
+
+        dialogData = new JLabel(String.valueOf(filmeInfo.getYear())); // ano do filme no database
         dialogData.setForeground(Color.WHITE);
         dialogData.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         infoDialog.add(dialogData,"grow,wrap");
-        
+
         dialogLabelProdutora = new JLabel("Produtora");
         dialogLabelProdutora.setForeground(Color.WHITE);
         infoDialog.add(dialogLabelProdutora,"align right");
-        
-        dialogProdutora = new JLabel("exemplo"); // produtora do filme no database
+
+        dialogProdutora = new JLabel((Icon) filmeInfo.getProducer()); // produtora do filme no database
         dialogProdutora.setForeground(Color.WHITE);
         dialogProdutora.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         infoDialog.add(dialogProdutora,"grow,wrap");
-        
+
         dialogLabelRate = new JLabel("Avaliação");
-        dialogLabelRate.setForeground(Color.WHITE); 
+        dialogLabelRate.setForeground(Color.WHITE);
         infoDialog.add(dialogLabelRate,"align right");
-        
-        dialogAvalLabel = new JLabel("exemplo"); // nota do filme no database
+
+        dialogAvalLabel = new JLabel(String.valueOf(filmeUsuarioInfo.getRate())); // nota do filme no database
         dialogAvalLabel.setForeground(Color.WHITE);
         dialogAvalLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         infoDialog.add(dialogAvalLabel,"grow,wrap");
-        
+
         int reply = JOptionPane.showConfirmDialog(window, infoDialog,null,JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
-        
+
     }
+
     //aqui
     //As tabs só atualizam quando clicadas, mas eu mudo isso depois que o resto do código estiver pronto!
 }
+

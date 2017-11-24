@@ -1,5 +1,6 @@
 package br.edu.ifsp.cmp.gerenciamentofilmes.models;
 
+import br.edu.ifsp.cmp.gerenciamentofilmes.dao.BaseDAO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +18,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User extends AbstractModel {
+public class User extends AbstractModel implements BaseModel {
 
     @Id
     @GeneratedValue

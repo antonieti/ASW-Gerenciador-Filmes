@@ -22,19 +22,17 @@ public class ProducerDAO implements BaseDAO{
     }
 
     @Override
-    public void save(AbstractModel object) {
+    public void save(Object object) {
         Producer producer = (Producer) object;
         em.getTransaction().begin();
         em.persist(producer);
         em.getTransaction().commit();
-        List<AbstractModel> list = findFrom("name", producer.getName());
-        producer.setId(list.get(0).getId());
     }
 
     @Override
-    public void update(AbstractModel m, Long id) {
+    public void update(Object m, Long id) {
         Producer bm = (Producer) findById(id);
-        bm.clone(m);
+        bm.clone((Producer)m);
         this.em.getTransaction().begin();
         this.em.persist(bm);
         this.em.getTransaction().commit();
@@ -71,7 +69,7 @@ public class ProducerDAO implements BaseDAO{
     }
 
     @Override
-    public void remove(AbstractModel object) {
+    public void remove(Object object) {
         em.getTransaction().begin();
         em.remove(object);
         em.getTransaction().commit();
