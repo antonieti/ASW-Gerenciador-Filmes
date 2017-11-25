@@ -225,6 +225,7 @@ public class View {
         UIManager.put("Menu.selectionBackground", new Color(236,110,69));
         UIManager.put("Menu.borderPainted",false);
         UIManager.put("Button.select", new Color(232,101,54));
+        UIManager.put("OptionPane.messageForeground", Color.white);
         
         UIManager.put("ScrollBar.background",new Color(251,251,251));
         UIManager.put("ScrollBar.track",new Color(251,251,251));
@@ -419,13 +420,6 @@ public class View {
         menuMain.add(Box.createHorizontalGlue());
         main.add(menuMain,"dock north");
         
-        /*
-        logoHome = new JMenu("LOGO");
-        logoHome.setFont(new Font("Mohave", Font.BOLD, 31));
-        logoHome.setForeground(Color.WHITE);
-        menuMain.add(logoHome,"");
-        */  
-        
         quit = new JMenu();
         quit.setIcon(logoutIcon);
         menuMain.add(quit,"");
@@ -495,7 +489,7 @@ public class View {
         assistindoPanelTab = new JPanel(new MigLayout("center","20[][]20","50[][]20"));
         assistindoPanelTab.setBackground(Color.WHITE);
         moviePane.addTab("Assistindo", assistindoPanelTab);
-        
+
         assistindoPanel = new JPanel(new MigLayout("wrap 2","10[]25[]10","[]10[]"));
         assistindoPanel.setBackground(Color.WHITE);
 
@@ -506,11 +500,11 @@ public class View {
         
         //Tab Finalizados
         finalizadoPanelTab = new JPanel(new MigLayout("center","20[][]20","50[][]20"));
-        finalizadoPanelTab.setBackground(Color.BLUE);
+        finalizadoPanelTab.setBackground(Color.WHITE);
         moviePane.addTab("Finalizados",finalizadoPanelTab);
         
-        finalizadoPanel = new JPanel(new MigLayout("wrap 2","10[]20[]10","[]10[]"));
-        finalizadoPanel.setBackground(Color.RED);
+        finalizadoPanel = new JPanel(new MigLayout("wrap 2","10[]25[]10","[]10[]"));
+        finalizadoPanel.setBackground(Color.WHITE);
         
         scrollFinal = new JScrollPane(finalizadoPanel);
         scrollFinal.setVerticalScrollBarPolicy(scrollFinal.VERTICAL_SCROLLBAR_ALWAYS);
@@ -532,8 +526,11 @@ public class View {
         quit.setSelected(false);
 
         user = null;
+        textlogin.setText("");
+        textpassword.setText("");
         //aqui
         //colocar codigo para desconectar o usuario atual
+
         
         cl.show(root, "login");
     }
@@ -583,12 +580,10 @@ public class View {
         int reply = JOptionPane.showConfirmDialog(window, addDialog,null,JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         
         if (reply == JOptionPane.OK_OPTION){
-            user = User.builder().name("Giovanna").userName("Giovanna").password("Giovanna").build();
             Short ano = Short.parseShort(dialogTextAno.getText());
             String nome = dialogTextNome.getText();
             String produtora = dialogTextProd.getText();
             Controller controller = new Controller();
-            controller.saveUser(user);
             controller.saveMovie(produtora, nome, ano,user);
             updateTab();
             // aqui
@@ -647,11 +642,12 @@ public class View {
         if (condition) {
             user = controller.login(userName);
             cl.show(root,"home");
+            updateTab();
+            username.setText("Bem vindo, "+ user.getName());
         }else{
             JOptionPane.showMessageDialog(null, "Senha ou usuario incorreto", "InfoBox: Erro ao realizar login" , JOptionPane.INFORMATION_MESSAGE);
         }
-        updateTab();
-        username.setText("Bem vindo, "+ user.getName());
+
         //aqui
         //colocar codigo para conectar o usuario
         
@@ -671,9 +667,11 @@ public class View {
         //textNewUserLabel.getText() = user do novo usuario
         //textpasswordNewUserLabel.getPassword() = senha do novo usuario
         Controller controller = new Controller();
-        controller.saveUser(textNomeLabel.getText(),textNewUserLabel.getText(),textpasswordNewUserLabel.getPassword());
+
+        user= controller.saveUser(textNomeLabel.getText(),textNewUserLabel.getText(),textpasswordNewUserLabel.getPassword());
 
         JOptionPane.showMessageDialog(null,"Usuário cadastrado com sucesso");
+        username.setText("Bem vindo, "+ user.getName());
 
         cl.show(root,"home");
     }
@@ -688,7 +686,7 @@ public class View {
         //update
         //ok
         assistindoPanel.removeAll();
-        finalizadoPanelTab.removeAll();
+        finalizadoPanel.removeAll();
 
         Controller controller = new Controller();
 
@@ -831,7 +829,7 @@ public class View {
         dialogLabelProdutora.setForeground(Color.WHITE);
         infoDialog.add(dialogLabelProdutora,"align right");
 
-        dialogProdutora = new JLabel((Icon) filmeInfo.getProducer()); // produtora do filme no database
+        dialogProdutora = new JLabel(filmeInfo.getProducer().getName()); // produtora do filme no database
         dialogProdutora.setForeground(Color.WHITE);
         dialogProdutora.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         infoDialog.add(dialogProdutora,"grow,wrap");
