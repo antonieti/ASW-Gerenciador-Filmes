@@ -2,7 +2,6 @@ package br.edu.ifsp.cmp.gerenciamentofilmes.dao;
 
 
 import br.edu.ifsp.cmp.gerenciamentofilmes.models.AbstractModel;
-import br.edu.ifsp.cmp.gerenciamentofilmes.models.BaseModel;
 import br.edu.ifsp.cmp.gerenciamentofilmes.models.Movie;
 import br.edu.ifsp.cmp.gerenciamentofilmes.utils.ConnectionFactory;
 
@@ -51,10 +50,10 @@ public class MovieDAO implements BaseDAO{
     public List findFrom(String column, String parameter) {
         Class entityClass = Movie.class;
         CriteriaBuilder cb = this.em.getCriteriaBuilder();
-        CriteriaQuery<BaseModel> query = cb.createQuery(BaseModel.class);
+        CriteriaQuery<AbstractModel> query = cb.createQuery(AbstractModel.class);
 
 
-        Root<BaseModel> from = query.from(entityClass);
+        Root<AbstractModel> from = query.from(entityClass);
 
         Predicate restriction = cb.like(from.<String>get(column), "%" + parameter + "%");
 
@@ -65,17 +64,17 @@ public class MovieDAO implements BaseDAO{
     public Movie findByName(String parameter) {
         Class entityClass = Movie.class;
         CriteriaBuilder cb = this.em.getCriteriaBuilder();
-        CriteriaQuery<BaseModel> query = cb.createQuery(BaseModel.class);
+        CriteriaQuery<AbstractModel> query = cb.createQuery(AbstractModel.class);
 
 
-        Root<BaseModel> from = query.from(entityClass);
+        Root<AbstractModel> from = query.from(entityClass);
 
         Predicate restriction = cb.equal(from.<String>get("name"),  parameter );
 
         query.select(from).equals(restriction);
 
-        List<BaseModel> movie =  em.createQuery(query.where(restriction)).getResultList();
-        for (BaseModel m: movie) {
+        List<AbstractModel> movie =  em.createQuery(query.where(restriction)).getResultList();
+        for (AbstractModel m: movie) {
             Movie movie1 = (Movie) m;
             if(movie1.getName().equalsIgnoreCase(parameter)){
                 return movie1;

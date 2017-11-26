@@ -1,7 +1,6 @@
 package br.edu.ifsp.cmp.gerenciamentofilmes.dao;
 
 import br.edu.ifsp.cmp.gerenciamentofilmes.models.AbstractModel;
-import br.edu.ifsp.cmp.gerenciamentofilmes.models.BaseModel;
 import br.edu.ifsp.cmp.gerenciamentofilmes.models.Producer;
 import br.edu.ifsp.cmp.gerenciamentofilmes.models.User;
 import br.edu.ifsp.cmp.gerenciamentofilmes.utils.ConnectionFactory;
@@ -51,10 +50,10 @@ public class ProducerDAO implements BaseDAO{
     public List findFrom(String column, String parameter) {
         Class entityClass = Producer.class;
         CriteriaBuilder cb = this.em.getCriteriaBuilder();
-        CriteriaQuery<BaseModel> query = cb.createQuery(BaseModel.class);
+        CriteriaQuery<AbstractModel> query = cb.createQuery(AbstractModel.class);
 
 
-        Root<BaseModel> from = query.from(entityClass);
+        Root<AbstractModel> from = query.from(entityClass);
 
         Predicate restriction = cb.like(from.<String>get(column), "%" + parameter + "%");
 

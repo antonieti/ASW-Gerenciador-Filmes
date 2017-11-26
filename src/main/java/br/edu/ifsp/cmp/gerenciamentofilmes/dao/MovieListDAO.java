@@ -1,7 +1,6 @@
 package br.edu.ifsp.cmp.gerenciamentofilmes.dao;
 
 import br.edu.ifsp.cmp.gerenciamentofilmes.models.AbstractModel;
-import br.edu.ifsp.cmp.gerenciamentofilmes.models.BaseModel;
 import br.edu.ifsp.cmp.gerenciamentofilmes.models.MovieList;
 import br.edu.ifsp.cmp.gerenciamentofilmes.utils.ConnectionFactory;
 
@@ -52,10 +51,10 @@ public class MovieListDAO implements BaseDAO {
     public List findFrom(String column, String parameter) {
         Class entityClass = MovieList.class;
         CriteriaBuilder cb = this.em.getCriteriaBuilder();
-        CriteriaQuery<BaseModel> query = cb.createQuery(BaseModel.class);
+        CriteriaQuery<AbstractModel> query = cb.createQuery(AbstractModel.class);
 
 
-        Root<BaseModel> from = query.from(entityClass);
+        Root<AbstractModel> from = query.from(entityClass);
 
         Predicate restriction = cb.like(from.<String>get(column), "%" + parameter + "%");
 
@@ -66,10 +65,10 @@ public class MovieListDAO implements BaseDAO {
     public List findFromUser(Long parameter) {
         Class entityClass = MovieList.class;
         CriteriaBuilder cb = this.em.getCriteriaBuilder();
-        CriteriaQuery<BaseModel> query = cb.createQuery(BaseModel.class);
+        CriteriaQuery<AbstractModel> query = cb.createQuery(AbstractModel.class);
 
 
-        Root<BaseModel> from = query.from(entityClass);
+        Root<AbstractModel> from = query.from(entityClass);
 
         Predicate restriction = cb.equal(from.<String>get("user"),  parameter );
 
@@ -80,10 +79,10 @@ public class MovieListDAO implements BaseDAO {
     public MovieList findByName(String parameter) {
         Class entityClass = MovieList.class;
         CriteriaBuilder cb = this.em.getCriteriaBuilder();
-        CriteriaQuery<BaseModel> query = cb.createQuery(BaseModel.class);
+        CriteriaQuery<AbstractModel> query = cb.createQuery(AbstractModel.class);
 
 
-        Root<BaseModel> from = query.from(entityClass);
+        Root<AbstractModel> from = query.from(entityClass);
 
         Predicate restriction = cb.equal(from.<String>get("name"),  parameter );
 
@@ -94,10 +93,10 @@ public class MovieListDAO implements BaseDAO {
     public List findFromMovie(Long parameter) {
         Class entityClass = MovieList.class;
         CriteriaBuilder cb = this.em.getCriteriaBuilder();
-        CriteriaQuery<BaseModel> query = cb.createQuery(BaseModel.class);
+        CriteriaQuery<AbstractModel> query = cb.createQuery(AbstractModel.class);
 
 
-        Root<BaseModel> from = query.from(entityClass);
+        Root<AbstractModel> from = query.from(entityClass);
 
         Predicate restriction = cb.equal(from.<String>get("name"),  parameter );
 

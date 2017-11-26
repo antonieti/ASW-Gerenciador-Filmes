@@ -39,8 +39,6 @@ public class MovieList extends AbstractModel{
     @Column(name = "avaliacao")
     private Long rate;
 
-    @Column(name = "dataAssistido")
-    private Date date;
 
 
 
@@ -48,7 +46,6 @@ public class MovieList extends AbstractModel{
     public void clone(AbstractModel object) {
         //it is implemented
         MovieList aux = (MovieList) object;
-        this.date = aux.getDate();
         this.name = aux.name;
         this.rate = aux.getRate();
         this.user = aux.getUser();

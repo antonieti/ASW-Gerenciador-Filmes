@@ -145,9 +145,12 @@ public class Controller {
     public boolean verifyPaswword(String userName, char[] password){
         UserDAO userDAO = new UserDAO();
         User user = (User) userDAO.findFrom(userName);
-        if(user.getPassword().equalsIgnoreCase(String.valueOf(password))){
-            return true;
+        if(user!=null){
+            if(user.getPassword().equalsIgnoreCase(String.valueOf(password))){
+                return true;
+            }
         }
+
 
         return false;
     }

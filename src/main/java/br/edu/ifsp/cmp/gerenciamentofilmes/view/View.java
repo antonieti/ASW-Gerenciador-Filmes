@@ -112,42 +112,42 @@ public class View {
     try {
             GraphicsEnvironment ge = 
             GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/font/Mohave.otf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/fonts/Mohave.otf")));
         } catch (IOException|FontFormatException e) {
             log.info(errorFont);
         }
     try {
             GraphicsEnvironment ge = 
             GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/font/Mohave-Bold.otf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/fonts/Mohave-Bold.otf")));
         } catch (IOException|FontFormatException e) {
            log.info(errorFont);
         }
     try {
             GraphicsEnvironment ge = 
             GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/font/Mohave-Bold Italics.otf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/fonts/Mohave-Bold Italics.otf")));
         } catch (IOException|FontFormatException e) {
             System.out.print(errorFont);
         }
     try {
             GraphicsEnvironment ge = 
             GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/font/Mohave Italics.otf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/fonts/Mohave-Italics.otf")));
         } catch (IOException|FontFormatException e) {
             System.out.print(errorFont);
         }
     try {
             GraphicsEnvironment ge = 
             GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/font/Mohave-SemiBold.otf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/fonts/Mohave-SemiBold.otf")));
         } catch (IOException|FontFormatException e) {
             System.out.print(errorFont);
         }
     try {
             GraphicsEnvironment ge = 
             GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/font/Mohave-SemiBold Italics.otf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/fonts/Mohave-SemiBold Italics.otf")));
         } catch (IOException|FontFormatException e) {
             System.out.print(errorFont);
         }
@@ -240,7 +240,7 @@ public class View {
         UIManager.put("Panel.background", new Color(53,60,66));
         UIManager.put("Button.background", new Color(236,110,69));
         UIManager.put("Button.foreground", Color.WHITE);
-        UIManager.put("Button.font",new Font("Dialog", Font.PLAIN,12));
+        UIManager.put("Button.fonts",new Font("Dialog", Font.PLAIN,12));
 
         //Exit + Minimize Menu
         menuBar = new JMenuBar();
@@ -633,20 +633,23 @@ public class View {
     }
     public void entrarMouseClicked(MouseEvent e) {
 
-        Controller controller = new Controller();
-        User user1 = User.builder().name("administrator").userName("adm123").password("123").build();
-        controller.saveUser(user1);
+
         String userName = textlogin.getText();
         char[] password = textpassword.getPassword();
-        boolean condition = controller.verifyPaswword(userName, password);
-        if (condition) {
-            user = controller.login(userName);
-            cl.show(root,"home");
-            updateTab();
-            username.setText("Bem vindo, "+ user.getName());
+        if((!(userName.equalsIgnoreCase(""))) && (!(password.toString().equalsIgnoreCase("")))){
+            Controller controller = new Controller();
+            if (controller.verifyPaswword(userName, password)) {
+                user = controller.login(userName);
+                cl.show(root,"home");
+                updateTab();
+                username.setText("Bem vindo, "+ user.getName());
+            }else{
+                JOptionPane.showMessageDialog(null, "Senha ou usuario incorreto", " Erro ao realizar login" , JOptionPane.INFORMATION_MESSAGE);
+            }
         }else{
-            JOptionPane.showMessageDialog(null, "Senha ou usuario incorreto", "InfoBox: Erro ao realizar login" , JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Preencha os campos necessários", " Erro ao realizar login" , JOptionPane.INFORMATION_MESSAGE);
         }
+
 
         //aqui
         //colocar codigo para conectar o usuario
@@ -667,13 +670,28 @@ public class View {
         //textNewUserLabel.getText() = user do novo usuario
         //textpasswordNewUserLabel.getPassword() = senha do novo usuario
         Controller controller = new Controller();
+        String name = textNomeLabel.getText();
+        String userName = textNewUserLabel.getText();
+        char[] password =textpasswordNewUserLabel.getPassword();
 
-        user= controller.saveUser(textNomeLabel.getText(),textNewUserLabel.getText(),textpasswordNewUserLabel.getPassword());
+        if((!(userName.equalsIgnoreCase(""))) && (!(password.toString().equalsIgnoreCase("")))&& ((!(name.equalsIgnoreCase(""))) )){
+            user= controller.saveUser(name,userName,password);
 
-        JOptionPane.showMessageDialog(null,"Usuário cadastrado com sucesso");
-        username.setText("Bem vindo, "+ user.getName());
+            JOptionPane.showMessageDialog(null,"Usuário cadastrado com sucesso");
+            username.setText("Bem vindo, "+ user.getName());
 
-        cl.show(root,"home");
+
+            cl.show(root,"home");
+            updateTab();
+            textNomeLabel.setText("");
+            textNewUserLabel.setText("");
+            textpasswordNewUserLabel.setText("");
+
+        }else{
+            JOptionPane.showMessageDialog(null,"Preencha os campos necessários");
+        }
+
+
     }
 
     public void cadastrarCancelarMouseClicked(MouseEvent e) {
@@ -726,7 +744,7 @@ public class View {
                         infoMouseClicked(e,nomes.getText());
                     }});
 
-                JLabel avaliacao = new JLabel(String.valueOf(finalizados.get(i).getRate()));
+                JLabel avaliacao = new JLabel(String.valueOf(finalizados.get(i).getRate()) + " estrela(s)");
                 finalizadoPanel.add(avaliacao," ");
             }
 
@@ -838,7 +856,7 @@ public class View {
         dialogLabelRate.setForeground(Color.WHITE);
         infoDialog.add(dialogLabelRate,"align right");
 
-        dialogAvalLabel = new JLabel(String.valueOf(filmeUsuarioInfo.getRate())); // nota do filme no database
+        dialogAvalLabel = new JLabel(String.valueOf(filmeUsuarioInfo.getRate() )+ " estrela(s)"); // nota do filme no database
         dialogAvalLabel.setForeground(Color.WHITE);
         dialogAvalLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         infoDialog.add(dialogAvalLabel,"grow,wrap");
