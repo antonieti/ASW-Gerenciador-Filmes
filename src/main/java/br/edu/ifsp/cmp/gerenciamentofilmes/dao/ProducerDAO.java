@@ -62,6 +62,27 @@ public class ProducerDAO implements BaseDAO{
 
     }
 
+    public Producer findByName(String parameter){
+        Class entityClass = Producer.class;
+        CriteriaBuilder cb = this.em.getCriteriaBuilder();
+        CriteriaQuery<AbstractModel> query = cb.createQuery(AbstractModel.class);
+
+
+        Root<AbstractModel> from = query.from(entityClass);
+
+        Predicate restriction = cb.equal(from.<String>get("name"), "%" + parameter + "%");
+
+        query.select(from).equals(restriction);
+        List<AbstractModel> producer = em.createQuery(query.where(restriction)).getResultList();
+        for (AbstractModel m: producer) {
+            Producer producer1 = (Producer) m;
+            if(producer1.getName().equalsIgnoreCase(parameter)){
+                return producer1;
+            }
+
+        }
+        return null;
+    }
     @Override
     public List findAll() {
         return findFrom("name", " ");

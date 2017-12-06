@@ -103,8 +103,10 @@ public class View {
     private JLabel dialogProdutora;
     private JLabel dialogAvalLabel;
     private JLabel dialogLabelRate;
-    
-    
+    private JLabel dialogLabelGenero;
+    private JTextField dialogTextGenero;
+
+
     public View(){
         //Custom Fonts
 
@@ -126,7 +128,7 @@ public class View {
     try {
             GraphicsEnvironment ge = 
             GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/fonts/Mohave-Bold Italics.otf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/fonts/Mohave-Bold-Italics.otf")));
         } catch (IOException|FontFormatException e) {
             System.out.print(errorFont);
         }
@@ -242,6 +244,18 @@ public class View {
         UIManager.put("Button.foreground", Color.WHITE);
         UIManager.put("Button.fonts",new Font("Dialog", Font.PLAIN,12));
 
+        UIManager.put("ComboBox.background", Color.WHITE);
+        UIManager.put("ComboBox.buttonBackground", Color.WHITE);
+        UIManager.put("ComboBox.buttonDarkShadow", Color.WHITE);
+        UIManager.put("ComboBox.buttonHighlight", Color.WHITE);
+        UIManager.put("ComboBox.buttonShadow", Color.WHITE);
+        UIManager.put("ComboBox.font", new Font("Dialog", Font.PLAIN, 12));
+        UIManager.put("ComboBox.foreground", Color.BLACK);
+        UIManager.put("ComboBox.isEnterSelectablePopup", Color.WHITE);
+        UIManager.put("ComboBox.selectionBackground", new Color(53,60,66));
+        UIManager.put("ComboBox.selectionForeground", Color.WHITE);
+        UIManager.put("ComboBox.borderPaintsFocus", Boolean.TRUE);
+        UIManager.put("ComboBox.border", Color.BLACK);
         //Exit + Minimize Menu
         menuBar = new JMenuBar();
         menuBar.setPreferredSize(new Dimension(826, 25));
@@ -322,6 +336,7 @@ public class View {
         logon.setBorderPainted(false);
         logon.setForeground(Color.WHITE);
         logon.setBackground(new Color(236,110,69));
+        logon.setFont(new Font("Dialog",Font.BOLD,11));
         login.add(logon,"w 112!");
         
         logon.addMouseListener(new MouseAdapter() {
@@ -335,6 +350,7 @@ public class View {
         newuser.setBorderPainted(false);
         newuser.setForeground(Color.WHITE);
         newuser.setBackground(new Color(236,110,69));
+        newuser.setFont(new Font("Dialog",Font.BOLD,11));
         login.add(newuser,"grow");
         
         newuser.addMouseListener(new MouseAdapter() {
@@ -428,10 +444,14 @@ public class View {
         username.setForeground(Color.WHITE);
         username.setFont(new Font("Dialog", Font.PLAIN,14));
         menuMain.add(username,"");
-        
-        //Font currentFont = username.getFont();
-        //System.out.println(currentFont.getName());
-        
+
+        /*
+        Font currentFont = logon.getFont();
+        System.out.println(currentFont.getName());
+        int size = logon.getFont().getSize();
+        System.out.println(size);
+        */
+
         add = new JMenu();
         add.setIcon(addIcon);
         menuMain.add(add,"");
@@ -484,32 +504,39 @@ public class View {
             
         }
         });
-        
+
         //Tab assistindo
-        assistindoPanelTab = new JPanel(new MigLayout("center","20[][]20","50[][]20"));
-        assistindoPanelTab.setBackground(Color.WHITE);
+        assistindoPanelTab = new JPanel(new MigLayout("center","20[][]20","30[][]20"));
+        assistindoPanelTab.setBackground(Color.white);
         moviePane.addTab("Assistindo", assistindoPanelTab);
 
+        JComboBox filtroAssistindo = new JComboBox();
+        assistindoPanelTab.add(filtroAssistindo,"wrap 1, gapbottom 20, width 200");
+
         assistindoPanel = new JPanel(new MigLayout("wrap 2","10[]25[]10","[]10[]"));
-        assistindoPanel.setBackground(Color.WHITE);
+        assistindoPanel.setBackground(Color.white);
 
         scrollAssistindo = new JScrollPane(assistindoPanel);
         scrollAssistindo.setVerticalScrollBarPolicy(scrollAssistindo.VERTICAL_SCROLLBAR_ALWAYS);
         scrollAssistindo.setBorder(BorderFactory.createEmptyBorder());
-        assistindoPanelTab.add(scrollAssistindo,"height 300, width 600,span 3");
-        
-        //Tab Finalizados
-        finalizadoPanelTab = new JPanel(new MigLayout("center","20[][]20","50[][]20"));
-        finalizadoPanelTab.setBackground(Color.WHITE);
+        assistindoPanelTab.add(scrollAssistindo,"height 300, width 600");
+
+
+//Tab Finalizados
+        finalizadoPanelTab = new JPanel(new MigLayout("center","20[][]20","30[][]20"));
+        finalizadoPanelTab.setBackground(Color.white);
         moviePane.addTab("Finalizados",finalizadoPanelTab);
-        
+
+        JComboBox filtroFinalizado = new JComboBox();
+        finalizadoPanelTab.add(filtroFinalizado,"wrap 1, gapbottom 20, width 200");
+
         finalizadoPanel = new JPanel(new MigLayout("wrap 2","10[]25[]10","[]10[]"));
-        finalizadoPanel.setBackground(Color.WHITE);
-        
+        finalizadoPanel.setBackground(Color.white);
+
         scrollFinal = new JScrollPane(finalizadoPanel);
         scrollFinal.setVerticalScrollBarPolicy(scrollFinal.VERTICAL_SCROLLBAR_ALWAYS);
         scrollFinal.setBorder(BorderFactory.createEmptyBorder());
-        finalizadoPanelTab.add(scrollFinal,"height 300, width 600,span 3");
+        finalizadoPanelTab.add(scrollFinal,"center,height 300, width 600");
         
         main.add(moviePane,"height 420, width 670,center,wrap");
 
@@ -576,6 +603,17 @@ public class View {
         dialogTextProd = new JTextField();
         dialogTextProd.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         addDialog.add(dialogTextProd ,"grow,wrap");
+
+        dialogLabelGenero = new JLabel("Genero");
+        dialogLabelGenero.setForeground(Color.WHITE);
+        addDialog.add(dialogLabelGenero,"align right");
+
+        dialogTextGenero = new JTextField();
+        dialogTextGenero.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+        addDialog.add(dialogTextGenero,"grow,wrap");
+
+
+
         
         int reply = JOptionPane.showConfirmDialog(window, addDialog,null,JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         
@@ -584,7 +622,8 @@ public class View {
             String nome = dialogTextNome.getText();
             String produtora = dialogTextProd.getText();
             Controller controller = new Controller();
-            controller.saveMovie(produtora, nome, ano,user);
+            String genero =dialogTextGenero.getText();
+            controller.saveMovie(produtora, nome, ano,user, genero);
             updateTab();
             // aqui
             // colocar o codigo para adicionar um novo filme
@@ -676,16 +715,23 @@ public class View {
 
         if((!(userName.equalsIgnoreCase(""))) && (!(password.toString().equalsIgnoreCase("")))&& ((!(name.equalsIgnoreCase(""))) )){
             user= controller.saveUser(name,userName,password);
+            if(!(user==null)){
+                JOptionPane.showMessageDialog(null,"Usuário cadastrado com sucesso");
+                username.setText("Bem vindo, "+ user.getName());
 
-            JOptionPane.showMessageDialog(null,"Usuário cadastrado com sucesso");
-            username.setText("Bem vindo, "+ user.getName());
 
+                cl.show(root,"home");
+                updateTab();
+                textNomeLabel.setText("");
+                textNewUserLabel.setText("");
+                textpasswordNewUserLabel.setText("");
 
-            cl.show(root,"home");
-            updateTab();
-            textNomeLabel.setText("");
-            textNewUserLabel.setText("");
-            textpasswordNewUserLabel.setText("");
+            }else{
+                JOptionPane.showMessageDialog(null,"Usuário já existe");
+                textNomeLabel.setText("");
+                textNewUserLabel.setText("");
+                textpasswordNewUserLabel.setText("");
+            }
 
         }else{
             JOptionPane.showMessageDialog(null,"Preencha os campos necessários");
@@ -748,10 +794,16 @@ public class View {
                 finalizadoPanel.add(avaliacao," ");
             }
 
+
+
             assistindoPanel.revalidate();
             finalizadoPanel.revalidate();
             assistindoPanel.repaint();
             finalizadoPanel.repaint();
+            assistindoPanelTab.revalidate();
+            finalizadoPanelTab.revalidate();
+            assistindoPanelTab.repaint();
+            finalizadoPanelTab.repaint();
 
     }
 

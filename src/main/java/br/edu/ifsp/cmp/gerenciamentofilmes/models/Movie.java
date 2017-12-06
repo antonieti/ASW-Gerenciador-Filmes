@@ -29,6 +29,9 @@ public class Movie extends AbstractModel{
     @JoinColumn(name = "produtora_id")
     private Producer producer;
 
+    @Column(name = "genero")
+    private String genre;
+
     @Column(name = "ano")
     private Short year;
 

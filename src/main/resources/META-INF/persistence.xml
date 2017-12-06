@@ -6,8 +6,12 @@
     <persistence-unit name="gerenciamentofilmes" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>br.edu.ifsp.cmp.gerenciamentofilmes.models.Movie</class>
+        <class>br.edu.ifsp.cmp.gerenciamentofilmes.models.Producer</class>
+        <class>br.edu.ifsp.cmp.gerenciamentofilmes.models.MovieList</class>
+        <class>br.edu.ifsp.cmp.gerenciamentofilmes.models.User</class>
 
         <properties>
+
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/gerenciamentofilmes"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
@@ -19,6 +23,7 @@
 
             <!--<property name="hibernate.hbm2ddl.auto" value="create-drop"/>-->
             <property name="hibernate.hbm2ddl.auto" value="update" />
+
         </properties>
     </persistence-unit>
 </persistence>

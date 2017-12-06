@@ -1,7 +1,6 @@
 package br.edu.ifsp.cmp.gerenciamentofilmes.dao;
 
 
-import br.edu.ifsp.cmp.gerenciamentofilmes.models.AbstractModel;
 
 import java.util.List;
 

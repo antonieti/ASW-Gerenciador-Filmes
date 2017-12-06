@@ -4,7 +4,6 @@ import br.edu.ifsp.cmp.gerenciamentofilmes.dao.MovieDAO;
 import br.edu.ifsp.cmp.gerenciamentofilmes.dao.MovieListDAO;
 import br.edu.ifsp.cmp.gerenciamentofilmes.dao.ProducerDAO;
 import br.edu.ifsp.cmp.gerenciamentofilmes.dao.UserDAO;
-import br.edu.ifsp.cmp.gerenciamentofilmes.models.AbstractModel;
 import br.edu.ifsp.cmp.gerenciamentofilmes.models.Movie;
 import br.edu.ifsp.cmp.gerenciamentofilmes.models.MovieList;
 import br.edu.ifsp.cmp.gerenciamentofilmes.models.Producer;
@@ -60,7 +59,6 @@ public class Controller {
     }
 
     private Movie findMovieUser(String name, Long user) {
-        MovieListDAO mlDAO = new MovieListDAO();
         Movie aux = null;
         List<MovieList> movieLists = loadMovies(user);
         for (MovieList m : movieLists) {
@@ -75,7 +73,6 @@ public class Controller {
     }
 
     private MovieList findMovieListUser(String name, Long user) {
-        MovieListDAO mlDAO = new MovieListDAO();
         MovieList aux = null;
         List<MovieList> movieLists = loadMovies(user);
         for (MovieList m : movieLists) {
@@ -106,14 +103,27 @@ public class Controller {
         return null;
     }
 
-    public void saveMovie(String producerName, String movie, Short year, User user) {
-        Producer producer = Producer.builder().name(producerName).build();
+    public void saveMovie(String producerName, String movie, Short year, User user, String genero) {
+        Producer producer;
         ProducerDAO pDAO = new ProducerDAO();
-        pDAO.save(producer);
+        Producer producerExist = (Producer) pDAO.findByName(producerName);
+        if(producerExist==null){
+             producer = Producer.builder().name(producerName).build();
+            pDAO.save(producer);
+        }else{
+             producer = producerExist;
+        }
+
 
         Movie movie1 = Movie.builder().name(movie).year(year).producer(producer).build();
         MovieDAO movieDAO = new MovieDAO();
-        movieDAO.save(movie1);
+        Movie movieExist = movieDAO.findByName(movie);
+        if(movieExist==null){
+            movieDAO.save(movie1);
+        }else {
+            movie1 = movieExist;
+        }
+
 
         MovieList ml = MovieList.builder().name(movie1).user(user).build();
         MovieListDAO mlDAO = new MovieListDAO();
@@ -131,9 +141,12 @@ public class Controller {
 
     public User saveUser(String name, String userName, char[] password){
         User user = User.builder().name(name).userName(userName).password(String.valueOf(password)).build();
-        UserDAO userDAO = new UserDAO();
-        userDAO.save(user);
-        return user;
+        if(saveUser(user)){
+            return user;
+        }else{
+            return null;
+        }
+
     }
 
     public User login(String userName){
@@ -155,9 +168,14 @@ public class Controller {
         return false;
     }
 
-    public void saveUser(User user){
+    public boolean saveUser(User user){
         UserDAO ud = new UserDAO();
-        ud.save(user);
+        if(ud.findFrom(user.getUserName())!=null){
+            return false;
+        }else{
+            ud.save(user);
+            return true;
+        }
     }
 
 

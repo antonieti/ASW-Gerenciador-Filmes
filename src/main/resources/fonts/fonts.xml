@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <fontFamilies>
     <fontFamily name="Mohave">
-        <normal><![CDATA[fonts/avenir/AvenirNext-Medium.ttf]]></normal>
-        <bold><![CDATA[fonts/avenir/AvenirNext-Bold.ttf]]></bold>
-        <italic><![CDATA[fonts/avenir/AvenirNext-Italic.ttf]]></italic>
-        <bolditalic><![CDATA[fonts/avenir/AvenirNext-BoldItalic.ttf]]></bolditalic>
+        <normal><![CDATA[fonts/avenir/Mohave.otf]]></normal>
+        <bold><![CDATA[fonts/avenir/Mohave-Bold.otf]]></bold>
+        <italic><![CDATA[fonts/avenir/Mohave-Italic.otf]]></italic>
+        <bolditalic><![CDATA[fonts/avenir/Mohave-Bold-Italics.otf]]></bolditalic>
         <pdfEmbedded><![CDATA[true]]></pdfEmbedded>
         <exportFonts/>
     </fontFamily>
